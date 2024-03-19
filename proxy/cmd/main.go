@@ -5,14 +5,15 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/amitbet/vncproxy/logger"
-	vncproxy "github.com/amitbet/vncproxy/proxy"
+	"github.com/JVisi/proxy_vnc/logger"
+	vncproxy "github.com/JVisi/proxy_vnc/proxy"
 )
 
 func main() {
 	//create default session if required
 	var tcpPort = flag.String("tcpPort", "", "tcp port")
 	var wsPort = flag.String("wsPort", "", "websocket port")
+	var wsUrl = flag.String("wsUrl", "", "websocket url")
 	var vncPass = flag.String("vncPass", "", "password on incoming vnc connections to the proxy, defaults to no password")
 	var recordDir = flag.String("recDir", "", "path to save FBS recordings WILL NOT RECORD if not defined.")
 	var targetVnc = flag.String("target", "", "target vnc server (host:port or /path/to/unix.socket)")
@@ -44,12 +45,17 @@ func main() {
 	if *tcpPort != "" {
 		tcpURL = ":" + string(*tcpPort)
 	}
-	wsURL := ""
-	if *wsPort != "" {
-		wsURL = "http://0.0.0.0:" + string(*wsPort) + "/"
+	if *wsUrl != "" && *wsPort != "" {
+		*wsUrl = *wsUrl + ":" + string(*wsPort)
+	}else{
+
+		if *wsPort != "" {
+			*wsUrl = "ws://localhost:" + string(*wsPort) + "/"
+		}
 	}
+	websocketURL := *wsUrl
 	proxy := &vncproxy.VncProxy{
-		WsListeningURL:   wsURL, // empty = not listening on ws
+		WsListeningURL:   websocketURL, // empty = not listening on ws
 		TCPListeningURL:  tcpURL,
 		ProxyVncPassword: *vncPass, //empty = no auth
 		SingleSession: &vncproxy.VncSession{

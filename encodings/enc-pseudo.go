@@ -2,7 +2,7 @@ package encodings
 
 import (
 	"io"
-	"github.com/amitbet/vncproxy/common"
+	"github.com/JVisi/proxy_vnc/common"
 )
 
 type PseudoEncoding struct {

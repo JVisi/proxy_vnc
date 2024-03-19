@@ -1,10 +1,10 @@
 package proxy
 
 import (
-	"github.com/amitbet/vncproxy/client"
-	"github.com/amitbet/vncproxy/common"
-	"github.com/amitbet/vncproxy/logger"
-	"github.com/amitbet/vncproxy/server"
+	"github.com/JVisi/proxy_vnc/client"
+	"github.com/JVisi/proxy_vnc/common"
+	"github.com/JVisi/proxy_vnc/logger"
+	"github.com/JVisi/proxy_vnc/server"
 )
 
 type ClientUpdater struct {

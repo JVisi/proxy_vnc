@@ -4,8 +4,8 @@ import (
 	"log"
 	"testing"
 
-	"github.com/amitbet/vncproxy/common"
-	"github.com/amitbet/vncproxy/encodings"
+	"github.com/JVisi/proxy_vnc/common"
+	"github.com/JVisi/proxy_vnc/encodings"
 )
 
 func newServerConnHandler(cfg *ServerConfig, conn *ServerConn) error {
