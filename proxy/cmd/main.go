@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"os"
-	"path/filepath"
 
 	"github.com/JVisi/proxy_vnc/logger"
 	vncproxy "github.com/JVisi/proxy_vnc/proxy"
@@ -13,12 +12,9 @@ func main() {
 	//create default session if required
 	var tcpPort = flag.String("tcpPort", "", "tcp port")
 	var wsPort = flag.String("wsPort", "", "websocket port")
-	var wsUrl = flag.String("wsUrl", "", "websocket url")
+	var wsUrl = flag.String("wsUrl", "", "websocket url:port without the prefix. (e.g.: localhost:6961)")
 	var vncPass = flag.String("vncPass", "", "password on incoming vnc connections to the proxy, defaults to no password")
-	var recordDir = flag.String("recDir", "", "path to save FBS recordings WILL NOT RECORD if not defined.")
 	var targetVnc = flag.String("target", "", "target vnc server (host:port or /path/to/unix.socket)")
-	var targetVncPort = flag.String("targPort", "", "target vnc server port (deprecated, use -target)")
-	var targetVncHost = flag.String("targHost", "", "target vnc server host (deprecated, use -target)")
 	var targetVncPass = flag.String("targPass", "", "target vnc password")
 	var logLevel = flag.String("logLevel", "info", "change logging level")
 
@@ -31,7 +27,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if *targetVnc == "" && *targetVncPort == "" {
+	if *targetVnc == "" {
 		logger.Error("no target vnc server host/port or socket defined")
 		flag.Usage()
 		os.Exit(1)
@@ -45,41 +41,19 @@ func main() {
 	if *tcpPort != "" {
 		tcpURL = ":" + string(*tcpPort)
 	}
-	if *wsUrl != "" && *wsPort != "" {
-		*wsUrl = *wsUrl + ":" + string(*wsPort)
-	}else{
-
-		if *wsPort != "" {
-			*wsUrl = "ws://localhost:" + string(*wsPort) + "/"
-		}
-	}
-	websocketURL := *wsUrl
+	
 	proxy := &vncproxy.VncProxy{
-		WsListeningURL:   websocketURL, // empty = not listening on ws
+		WsListeningURL:   *wsUrl, // empty = not listening on ws
 		TCPListeningURL:  tcpURL,
 		ProxyVncPassword: *vncPass, //empty = no auth
 		SingleSession: &vncproxy.VncSession{
-			Target:         *targetVnc,
-			TargetHostname: *targetVncHost,
-			TargetPort:     *targetVncPort,
+			Target:         *targetVnc, //"localhost:5900
 			TargetPassword: *targetVncPass, //"vncPass",
 			ID:             "dummySession",
 			Status:         vncproxy.SessionStatusInit,
 			Type:           vncproxy.SessionTypeProxyPass,
 		}, // to be used when not using sessions
 		UsingSessions: false, //false = single session - defined in the var above
-	}
-
-	if *recordDir != "" {
-		fullPath, err := filepath.Abs(*recordDir)
-		if err != nil {
-			logger.Error("bad recording path: ", err)
-		}
-		logger.Info("FBS recording is turned on, writing to dir: ", fullPath)
-		proxy.RecordingDir = fullPath
-		proxy.SingleSession.Type = vncproxy.SessionTypeRecordingProxy
-	} else {
-		logger.Info("FBS recording is turned off")
 	}
 
 	proxy.StartListening()

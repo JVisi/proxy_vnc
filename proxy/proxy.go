@@ -79,9 +79,6 @@ func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server
 	session.Status = SessionStatusInit
 	if session.Type == SessionTypeProxyPass {
 		target := session.Target
-		if session.TargetHostname != "" && session.TargetPort != "" {
-			target = session.TargetHostname + ":" + session.TargetPort
-		}
 
 		cconn, err := vp.createClientConnection(target, session.TargetPassword)
 		if err != nil {
@@ -140,7 +137,7 @@ func (vp *VncProxy) StartListening() {
 	secHandlers := []server.SecurityHandler{&server.ServerAuthNone{}}
 
 	if vp.ProxyVncPassword != "" {
-		secHandlers = []server.SecurityHandler{&server.ServerAuthVNC{vp.ProxyVncPassword}}
+		secHandlers = []server.SecurityHandler{&server.ServerAuthVNC{Pass: vp.ProxyVncPassword}}
 	}
 	cfg := &server.ServerConfig{
 		SecurityHandlers: secHandlers,
