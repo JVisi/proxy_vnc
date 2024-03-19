@@ -68,7 +68,6 @@ func TcpServe(url string, cfg *ServerConfig) error {
 		}
 		go attachNewServerConn(c, cfg, "dummySession")
 	}
-	return nil
 }
 
 func attachNewServerConn(c io.ReadWriter, cfg *ServerConfig, sessionId string) error {
@@ -79,7 +78,7 @@ func attachNewServerConn(c io.ReadWriter, cfg *ServerConfig, sessionId string) e
 	}
 
 	if err := ServerVersionHandler(cfg, conn); err != nil {
-		fmt.Errorf("err: %v\n", err)
+		fmt.Printf("err: %v\n", err)
 		conn.Close()
 		return err
 	}

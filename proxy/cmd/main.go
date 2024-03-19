@@ -12,7 +12,7 @@ func main() {
 	//create default session if required
 	var tcpPort = flag.String("tcpPort", "", "tcp port")
 	var wsPort = flag.String("wsPort", "", "websocket port")
-	var wsUrl = flag.String("wsUrl", "", "websocket url:port without the prefix. (e.g.: localhost:6961)")
+	var wsUrl = flag.String("wsUrl", "", "websocket url:port (currently) with the prefix. (e.g.: ws://localhost:6961)")
 	var vncPass = flag.String("vncPass", "", "password on incoming vnc connections to the proxy, defaults to no password")
 	var targetVnc = flag.String("target", "", "target vnc server (host:port or /path/to/unix.socket)")
 	var targetVncPass = flag.String("targPass", "", "target vnc password")

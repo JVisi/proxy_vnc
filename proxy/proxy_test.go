@@ -13,8 +13,6 @@ func TestProxy(t *testing.T) {
 		//RecordingDir:          "C:\\vncRec", // empty = no recording
 		ProxyVncPassword: "1234", //empty = no auth
 		SingleSession: &VncSession{
-			TargetHostname: "192.168.1.101",
-			TargetPort:     "5901",
 			TargetPassword: "123456",
 			ID:             "dummySession",
 			Status:         SessionStatusInit,
