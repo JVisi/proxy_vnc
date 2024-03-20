@@ -13,11 +13,10 @@ import (
 type VncProxy struct {
 	TCPListeningURL  string      // empty = not listening on tcp
 	WsListeningURL   string      // empty = not listening on ws
-	RecordingDir     string      // empty = no recording
 	ProxyVncPassword string      //empty = no auth
 	SingleSession    *VncSession // to be used when not using sessions
 	UsingSessions    bool        //false = single session - defined in the var above
-	sessionManager   *SessionManager
+	SessionManager   *SessionManager
 }
 
 func (vp *VncProxy) createClientConnection(target string, vncPass string) (*client.ClientConn, error) {
@@ -63,7 +62,7 @@ func (vp *VncProxy) getProxySession(sessionId string) (*VncSession, error) {
 		}
 		return vp.SingleSession, nil
 	}
-	return vp.sessionManager.GetSession(sessionId)
+	return vp.SessionManager.GetSession(sessionId)
 }
 
 func (vp *VncProxy) newServerConnHandler(cfg *server.ServerConfig, sconn *server.ServerConn) error {

@@ -21,5 +21,4 @@ type VncSession struct {
 	ID             string
 	Status         SessionStatus
 	Type           SessionType
-	ReplayFilePath string
 }
